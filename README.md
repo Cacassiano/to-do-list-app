@@ -1,2 +1,5 @@
-# First-CRUD-SpringBoot
-Um sistema de cadastro de pedidos para uma lanchonete
+# TO DO's api
+
+uma simples api para gerenciar um sistema de lista de tarefas e fazer comunicação com o front-end.
+
+link da api: (ainda farei o deploy)
