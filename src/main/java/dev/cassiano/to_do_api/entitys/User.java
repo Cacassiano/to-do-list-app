@@ -1,5 +1,6 @@
 package dev.cassiano.to_do_api.entitys;
 
+import dev.cassiano.to_do_api.DTOs.UserReqDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,12 +20,18 @@ import lombok.Setter;
 
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long id = 0l;
     
-    String nome;
+    String nome = "null";
 
-    int tarefas;
+    int tarefas = 0;
 
-    String email;
+    String email = "null";
 
+    public User(UserReqDTO req)
+    {
+        this.email = req.email();
+        this.nome = req.nome();
+        this.tarefas = req.tarefas();
+    }
 }
