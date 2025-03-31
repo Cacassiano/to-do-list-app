@@ -1,6 +1,7 @@
-package dev.cassiano.to_do_api.entitys;
+package dev.cassiano.to_do_api.users;
 
-import dev.cassiano.to_do_api.DTOs.UserReqDTO;
+import dev.cassiano.to_do_api.users.dtos.UserReqDTO;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,19 +20,23 @@ import lombok.Setter;
 @Table(name = "users")
 
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id = 0l;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(unique = true)
+    Long id;
     
-    String nome = "null";
+    @Column(unique = true)
+    String username;
 
-    int tarefas = 0;
+    String email;
+    
+    String senha;
 
-    String email = "null";
+    String cargo;
 
     public User(UserReqDTO req)
     {
         this.email = req.email();
-        this.nome = req.nome();
-        this.tarefas = req.tarefas();
+        this.username = req.username();
+        this.senha = req.senha();
+        this.cargo = req.cargo();
     }
 }

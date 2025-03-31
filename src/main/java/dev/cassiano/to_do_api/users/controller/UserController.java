@@ -1,6 +1,5 @@
-package dev.cassiano.to_do_api.controllers;
+package dev.cassiano.to_do_api.users.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,18 +11,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.cassiano.to_do_api.DTOs.UserReqDTO;
-import dev.cassiano.to_do_api.DTOs.UserRespDTO;
-import dev.cassiano.to_do_api.controllers.service.UserService;
-import dev.cassiano.to_do_api.entitys.User;
+import dev.cassiano.to_do_api.users.User;
+import dev.cassiano.to_do_api.users.dtos.UserReqDTO;
+import dev.cassiano.to_do_api.users.dtos.UserRespDTO;
+import dev.cassiano.to_do_api.users.service.UserService;
 
 @RestController
 @RequestMapping("/user")
 
+
+
 public class UserController {
     
     @Autowired
-    private UserService service = new UserService();
+    private UserService service;
 
     @GetMapping("/{id}/get")
     public UserRespDTO getById(@PathVariable Long id)
@@ -32,51 +33,45 @@ public class UserController {
     }
 
     @PostMapping("/get")
-    public UserRespDTO getUser(@RequestBody UserReqDTO requisicao)
+    public UserRespDTO getUser(@RequestBody UserReqDTO requisicao) throws Exception
     {
         
-        User user = service.getByNomeAndEmail(requisicao.nome(), requisicao.email());
+        User user = service.getByNome(requisicao.username());
         if(user != null)
         {
             UserRespDTO DTO = new UserRespDTO(user);
             return DTO;
         }
-        return new UserRespDTO(new User());
+        throw new Exception("Usuário não existe");
     }
 
     @PutMapping("/update")
-    public String updateUser(@RequestBody UserReqDTO requisicao)
+    public String updateUser(@RequestBody UserReqDTO requisicao) throws Exception
     {
         if(service.updateUser(requisicao)){
             return "Usuario atualizado";
         }
-        return "Erro ao realizar a operação";
+        throw new Exception("Erro ao realizar a atualizacão do usuario");
     } 
 
     @PostMapping("/create")
-    public String createUser(@RequestBody UserReqDTO requisicao)
+    public String createUser(@RequestBody UserReqDTO requisicao) throws Exception
     {
         if(service.createUser(requisicao))
         {
             return "Usuario criado com sucesso";
         }
-        return "Erro ao realizar a criação de usuario";
+        throw new Exception("Erro ao realizar a criação de usuario");
     }
 
 
     @DeleteMapping("/delete")
-    public String deleteUser(@RequestBody UserReqDTO requisicao)
+    public String deleteUser(@RequestBody UserReqDTO requisicao) throws Exception
     {
         if(service.deleteUser(requisicao))
         {
             return "Usuario deletado com sucesso";
         }
-        return "Erro ao realizar a deleção de usuario";
-    }
-
-    @GetMapping("/test/todos")
-    public List<UserRespDTO> verTodos()
-    {
-        return service.showAll();
+        throw new Exception("Erro ao realizar a deleção de usuario");
     }
 }

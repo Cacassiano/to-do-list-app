@@ -1,4 +1,4 @@
-package dev.cassiano.to_do_api.entitys;
+package dev.cassiano.to_do_api.tarefas;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
