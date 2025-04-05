@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.cassiano.to_do_api.users.User;
 import dev.cassiano.to_do_api.users.dtos.UserReqDTO;
 import dev.cassiano.to_do_api.users.dtos.UserRespDTO;
-import dev.cassiano.to_do_api.users.service.UserService;
+import dev.cassiano.to_do_api.users.service.UserControllerService;
 
 @RestController
 @RequestMapping("/user")
@@ -24,7 +24,7 @@ import dev.cassiano.to_do_api.users.service.UserService;
 public class UserController {
     
     @Autowired
-    private UserService service;
+    private UserControllerService service;
 
     @GetMapping("/{id}/get")
     public UserRespDTO getById(@PathVariable Long id)

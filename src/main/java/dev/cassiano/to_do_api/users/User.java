@@ -1,6 +1,12 @@
 package dev.cassiano.to_do_api.users;
 
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import dev.cassiano.to_do_api.users.dtos.UserReqDTO;
+import dev.cassiano.to_do_api.users.userdetails.UserHierarqy;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +25,7 @@ import lombok.Setter;
 @Entity(name = "User")
 @Table(name = "users")
 
-public class User {
+public class User implements UserDetails{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(unique = true)
     Long id;
     
@@ -38,5 +44,15 @@ public class User {
         this.username = req.username();
         this.senha = req.senha();
         this.cargo = req.cargo();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new UserHierarqy().grantAutority(this.cargo);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
     }
 }

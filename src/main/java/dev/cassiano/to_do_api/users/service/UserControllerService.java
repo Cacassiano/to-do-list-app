@@ -2,6 +2,7 @@ package dev.cassiano.to_do_api.users.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,10 +12,15 @@ import dev.cassiano.to_do_api.users.dtos.UserRespDTO;
 import dev.cassiano.to_do_api.users.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserControllerService {
 
     @Autowired
     private UserRepository repository;
+    
+    @Autowired
+    private PasswordEncoder criptografia;
+
+
 
     public UserRespDTO getById(Long id)
     {
@@ -27,12 +33,8 @@ public class UserService {
 
     private boolean saveUser(User user) throws Exception
     {
-        try{
-            repository.save(user);
-            return true;
-        }catch(Exception e){
-            throw e;
-        }
+        repository.save(user); 
+        return true;    
     }
 
     public User getByNome(String nome)
@@ -45,9 +47,13 @@ public class UserService {
         if(repository.existsByUsernameAndSenha(req.username(), req.senha()))
         {
             User nUser = repository.findByUsername(req.username());
+
             nUser.setEmail(req.email());
             nUser.setCargo(req.cargo());
-            nUser.setSenha(req.senha());
+            
+            String encodeSenha = criptografia.encode(req.senha());
+            nUser.setSenha(encodeSenha);
+            
             return saveUser(nUser);
         }
         throw new Exception("Usuário não existe");
@@ -58,6 +64,10 @@ public class UserService {
         if(!repository.existsByUsername(req.username()))
         {
             User nUser = new User(req);
+
+            String encodeSenha = criptografia.encode(req.senha());
+            nUser.setSenha(encodeSenha);
+            
             return saveUser(nUser);
         }
         throw new Exception("Usuário já existe");
