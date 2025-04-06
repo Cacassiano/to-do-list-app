@@ -2,7 +2,6 @@ package dev.cassiano.to_do_api.users.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,11 +16,6 @@ public class UserControllerService {
     @Autowired
     private UserRepository repository;
     
-    @Autowired
-    private PasswordEncoder criptografia;
-
-
-
     public UserRespDTO getById(Long id)
     {
         if(repository.existsById(id))
@@ -51,7 +45,7 @@ public class UserControllerService {
             nUser.setEmail(req.email());
             nUser.setCargo(req.cargo());
             
-            String encodeSenha = criptografia.encode(req.senha());
+            String encodeSenha = req.senha();
             nUser.setSenha(encodeSenha);
             
             return saveUser(nUser);
@@ -65,7 +59,7 @@ public class UserControllerService {
         {
             User nUser = new User(req);
 
-            String encodeSenha = criptografia.encode(req.senha());
+            String encodeSenha =req.senha();
             nUser.setSenha(encodeSenha);
             
             return saveUser(nUser);
