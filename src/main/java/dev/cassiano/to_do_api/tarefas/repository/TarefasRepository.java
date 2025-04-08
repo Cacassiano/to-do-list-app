@@ -9,8 +9,9 @@ import dev.cassiano.to_do_api.tarefas.Tarefa;
 import dev.cassiano.to_do_api.tarefas.dtos.TarefasResponseDTO;
 
 @Repository
-public interface TarefasRepository extends JpaRepository<Tarefa, Long>
+public interface TarefasRepository extends JpaRepository<Tarefa, String>
 {
     Tarefa findByTitleAndDono(String title, String dono);
     List<TarefasResponseDTO> findAllByDono(String dono);
+
 }
