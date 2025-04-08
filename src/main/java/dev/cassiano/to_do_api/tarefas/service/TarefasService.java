@@ -13,12 +13,15 @@ import dev.cassiano.to_do_api.tarefas.dtos.IdDTO;
 import dev.cassiano.to_do_api.tarefas.dtos.TarefasDTO;
 import dev.cassiano.to_do_api.tarefas.dtos.TarefasResponseDTO;
 import dev.cassiano.to_do_api.tarefas.repository.TarefasRepository;
+import dev.cassiano.to_do_api.users.repository.UserRepository;
 
 @Service
 public class TarefasService {
     
     @Autowired
     private TarefasRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     public ResponseEntity<String> createTarefa(String dono_id, TarefasDTO req) {
         if(repository.findByTitleAndDono(req.title(), dono_id) == null) {
@@ -62,6 +65,13 @@ public class TarefasService {
             return ResponseEntity.ok().body(new IdDTO(tarefa.getId()));
         }
         return ResponseEntity.internalServerError().build();
+    }
+
+    public List<TarefasResponseDTO> getAll(String dono_id) throws Exception {
+        if(userRepository.existsById(dono_id)) {
+            return repository.findAllByDono(dono_id);
+        }
+        throw new Exception("Tarefa não existe");
     }
     
     

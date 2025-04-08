@@ -1,5 +1,7 @@
 package dev.cassiano.to_do_api.tarefas.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.cassiano.to_do_api.tarefas.dtos.IdDTO;
 import dev.cassiano.to_do_api.tarefas.dtos.TarefasDTO;
+import dev.cassiano.to_do_api.tarefas.dtos.TarefasResponseDTO;
 import dev.cassiano.to_do_api.tarefas.service.TarefasService;
 
 @RestController
@@ -54,4 +57,38 @@ public class TarefasController {
         return ResponseEntity.unprocessableEntity().build();
     }
 
+    @GetMapping("/{dono_id}/get")
+    public ResponseEntity<List<TarefasResponseDTO>> getAll(@PathVariable String dono_id) throws Exception {
+        if(dono_id.length() > 20) {
+            return ResponseEntity.ok(service.getAll(dono_id));
+        }
+        return ResponseEntity.unprocessableEntity().build();
+    }
+
+
+    @GetMapping("/{dono_id}/get/done")
+    public List<TarefasResponseDTO> getDone(@PathVariable String dono_id) throws Exception {
+        List<TarefasResponseDTO> todas = service.getAll(dono_id);
+        
+        for (int i = 0; i<todas.size();i++) {
+            if(todas.get(i).concluida() == false) {
+                todas.remove(todas.get(i));
+                i--;
+            }
+        }
+        return todas;
+    }
+
+    @GetMapping("/{dono_id}/get/notDone")
+    public List<TarefasResponseDTO> getNotDone(@PathVariable String dono_id) throws Exception {
+        List<TarefasResponseDTO> todas = service.getAll(dono_id);
+        
+        for (int i = 0; i<todas.size();i++) {
+            if(todas.get(i).concluida() == true) {
+                todas.remove(todas.get(i));
+                i--;
+            }
+        }
+        return todas;
+    }
 }
