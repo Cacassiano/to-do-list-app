@@ -3,6 +3,7 @@ package dev.cassiano.to_do_api.tarefas;
 import java.time.OffsetDateTime;
 
 import dev.cassiano.to_do_api.tarefas.dtos.TarefasDTO;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tarefa {
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(unique = true)
     String id;
 
     String title;

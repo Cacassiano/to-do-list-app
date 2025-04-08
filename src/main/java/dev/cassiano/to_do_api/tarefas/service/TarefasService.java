@@ -30,6 +30,16 @@ public class TarefasService {
     public List<TarefasResponseDTO> getAllTarefas(String username) {
         return repository.findAllByDono(username);
     }
+
+    public ResponseEntity<String> deleteTask(String dono_id, String title) {
+        Tarefa tarefa = repository.findByTitleAndDono(title, dono_id);
+        if(tarefa != null) {
+            repository.delete(tarefa);
+            return ResponseEntity.ok().body("tarefa deletada");
+        }
+        return ResponseEntity.internalServerError().body("Tarefa não existe");
+    }
+    
     
 
 }
