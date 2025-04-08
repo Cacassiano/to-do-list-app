@@ -18,13 +18,11 @@ public class TarefasService {
     @Autowired
     private TarefasRepository repository;
 
-	public ResponseEntity<String> createTarefa(String username, TarefasDTO req) {
-        if(repository.findByTitleAndDono(req.title(), username) == null) {
+	public ResponseEntity<String> createTarefa(String dono_id, TarefasDTO req) {
+        if(repository.findByTitleAndDono(req.title(), dono_id) == null) {
 
-            repository.save(new Tarefa(req, username));
-
+            repository.save(new Tarefa(req, dono_id));
             return ResponseEntity.status(HttpStatus.CREATED).body("Tarefa criada com sucesso");
-            
         }
         return ResponseEntity.internalServerError().body("Já existe uma tarefa com este nome");
     }

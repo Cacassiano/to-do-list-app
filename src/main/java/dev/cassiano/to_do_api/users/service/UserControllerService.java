@@ -16,7 +16,7 @@ public class UserControllerService {
     @Autowired
     private UserRepository repository;
     
-    public UserRespDTO getById(Long id)
+    public UserRespDTO getById(String id)
     {
         if(repository.existsById(id))
         {

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.cassiano.to_do_api.users.User;
+import dev.cassiano.to_do_api.users.dtos.CreateReturnDTO;
 import dev.cassiano.to_do_api.users.dtos.UserReqDTO;
 import dev.cassiano.to_do_api.users.dtos.UserRespDTO;
+import dev.cassiano.to_do_api.users.repository.UserRepository;
 import dev.cassiano.to_do_api.users.service.UserControllerService;
 
 @RestController
@@ -25,9 +27,11 @@ public class UserController {
     
     @Autowired
     private UserControllerService service;
+    @Autowired
+    private UserRepository repository;
 
     @GetMapping("/{id}/get")
-    public UserRespDTO getById(@PathVariable Long id)
+    public UserRespDTO getById(@PathVariable String id)
     {
         return service.getById(id);
     }
@@ -55,11 +59,11 @@ public class UserController {
     } 
 
     @PostMapping("/create")
-    public String createUser(@RequestBody UserReqDTO requisicao) throws Exception
+    public CreateReturnDTO createUser(@RequestBody UserReqDTO requisicao) throws Exception
     {
         if(service.createUser(requisicao))
         {
-            return "Usuario criado com sucesso";
+            return new CreateReturnDTO(repository.findByUsername(requisicao.username()));
         }
         throw new Exception("Erro ao realizar a criação de usuario");
     }

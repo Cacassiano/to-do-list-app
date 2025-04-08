@@ -22,8 +22,8 @@ import lombok.Setter;
 @Table(name = "users")
 
 public class User{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(unique = true)
-    Long id;
+    @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(unique = true)
+    String id;
     
     @Column(unique = true)
     String username;
