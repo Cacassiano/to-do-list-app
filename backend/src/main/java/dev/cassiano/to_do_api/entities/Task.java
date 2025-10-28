@@ -27,6 +27,9 @@ public class Task {
     @Column(name="discription", nullable = true, unique=false)
     private String discription;
 
+    @Column(name = "status", nullable = false, unique = false)
+    public String status;
+
     @Column(name="created-at", nullable= false, unique=false)
     private LocalDateTime created_at;
 
