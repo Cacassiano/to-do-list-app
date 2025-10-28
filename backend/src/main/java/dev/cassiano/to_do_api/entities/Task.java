@@ -2,10 +2,12 @@ package dev.cassiano.to_do_api.entities;
 
 import java.time.LocalDateTime;
 
+import dev.cassiano.to_do_api.dtos.TaskReqDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 @Entity(name="tasks")
 @Table(name="tasks")
 @Getter
+@NoArgsConstructor
 public class Task {
     @Id 
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -39,5 +42,14 @@ public class Task {
     @ManyToOne
     @JoinColumn(name="owner")
     private User user;
+
+    public Task(TaskReqDTO req, User user) {
+        this.created_at = LocalDateTime.now();
+        this.updated_at = this.created_at;
+        this.title = req.getTitle();
+        this.status = req.getStatus();
+        this.discription = req.getDescription();
+        this.user = user;
+    }
 
 }
