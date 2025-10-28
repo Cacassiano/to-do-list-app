@@ -17,7 +17,7 @@ public record TaskResDTO(
         this(
             task.getId(),
             task.getTitle(),
-            task.getDiscription(),
+            task.getDescription(),
             task.getStatus(),
             task.getCreated_at(),
             task.getUpdated_at()

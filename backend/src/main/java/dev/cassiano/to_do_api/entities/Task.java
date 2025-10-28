@@ -28,7 +28,7 @@ public class Task {
     private String title;
 
     @Column(name="discription", nullable = true, unique=false)
-    private String discription;
+    private String description;
 
     @Column(name = "status", nullable = false, unique = false)
     public String status;
@@ -48,8 +48,15 @@ public class Task {
         this.updated_at = this.created_at;
         this.title = req.getTitle();
         this.status = req.getStatus();
-        this.discription = req.getDescription();
+        this.description = req.getDescription();
         this.user = user;
+    }
+
+    public void update(TaskReqDTO req) {
+        this.updated_at = LocalDateTime.now();
+        this.title = req.getTitle();
+        this.status = req.getStatus();
+        this.description = req.getDescription();
     }
 
 }

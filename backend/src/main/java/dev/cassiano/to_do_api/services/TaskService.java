@@ -15,13 +15,16 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
     
-    public Task createTask(TaskReqDTO req, User user) {
-        Task task = new Task(req, user);
+    public Task saveTask(Task task) {
         return taskRepository.save(task);
     }
 
     public Task getById(Long id) throws NotFoundException{
         return taskRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("This task doesn't exists"));
+    }
+
+    public void deleteById(Long id) {
+        taskRepository.deleteById(id);
     }
 }
