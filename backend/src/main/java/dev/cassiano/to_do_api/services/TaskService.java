@@ -3,9 +3,7 @@ package dev.cassiano.to_do_api.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.cassiano.to_do_api.dtos.TaskReqDTO;
 import dev.cassiano.to_do_api.entities.Task;
-import dev.cassiano.to_do_api.entities.User;
 import dev.cassiano.to_do_api.exceptions.customs.NotFoundException;
 import dev.cassiano.to_do_api.repositories.TaskRepository;
 
