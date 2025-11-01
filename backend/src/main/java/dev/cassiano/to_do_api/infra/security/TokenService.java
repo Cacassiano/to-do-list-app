@@ -1,8 +1,7 @@
 package dev.cassiano.to_do_api.infra.security;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,9 +41,9 @@ public class TokenService {
 
 
     private Instant getExpirationDate(){
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expirationDate = now.plusSeconds(expirationInSecs);
+        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime expirationDate = now.plusSeconds(expirationInSecs);
         System.out.println("Token's expiration date: "+expirationDate);
-        return expirationDate.toInstant(ZoneOffset.ofHours(0));
+        return expirationDate.toInstant();
     }
 }

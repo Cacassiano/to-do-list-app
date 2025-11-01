@@ -14,7 +14,9 @@ public class TaskReqDTO {
     public TaskReqDTO(String title, String description, String status) throws IllegalArgumentException{
         this.title = title;
         this.description = description;
+        
+        status = status.toUpperCase();
         Status.valueOf(status);
-        this.status = status.toUpperCase();
+        this.status = status;
     }
 }
