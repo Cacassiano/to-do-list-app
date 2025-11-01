@@ -1,18 +1,18 @@
-FROM ubuntu:latest AS build
+FROM maven:4.0.0-rc-4-amazoncorretto-17-al2023 AS build
+WORKDIR /build
 
-
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk
 COPY . .
-
-
-RUN apt-get maven -y
 RUN mvn clean install -DskipTests
 
-FROM openjdk:17-slim
+
+FROM activestate/jre
+WORKDIR /app
+
+COPY --from=build build/target/to-do-api-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
 
-COPY --from=build target/to-do-api-0.0.1-SNAPSHOT.jar app.jar
-
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
+
+
 

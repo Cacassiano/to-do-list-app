@@ -20,10 +20,6 @@ public class SpringSecurityConfig {
 
     @Autowired
     private AuthenticationFilter authenticationFilter;
-    
-    @SuppressWarnings("unused")
-    @Autowired
-    private CustomUserDetailsService userDetails;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
