@@ -9,53 +9,66 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.cassiano.to_do_api.dtos.TaskReqDTO;
-import dev.cassiano.to_do_api.dtos.TaskResDTO;
+import dev.cassiano.to_do_api.dtos.task.TaskReqDTO;
+import dev.cassiano.to_do_api.dtos.task.TaskResDTO;
+import dev.cassiano.to_do_api.dtos.user.TokenReqDTO;
 import dev.cassiano.to_do_api.entities.Task;
+import dev.cassiano.to_do_api.entities.User;
 import dev.cassiano.to_do_api.exceptions.customs.NotFoundException;
 import dev.cassiano.to_do_api.services.TaskService;
+import dev.cassiano.to_do_api.services.UserService;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<TaskResDTO> createTask(
-        @RequestBody TaskReqDTO req
-        //@RequestHeader("Authorization") User user
-    ) {
-        Task task = taskService.saveTask(new Task(req, null));
+        @RequestBody TaskReqDTO req,
+        @RequestHeader("Authorization") TokenReqDTO token
+    ) throws NotFoundException{
+        User user = userService.getUserByToken(token.getToken());
+        Task task = taskService.saveTask(new Task(req, user));
         return ResponseEntity.status(HttpStatus.CREATED).body(new TaskResDTO(task));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResDTO> getTaksById(
-        @PathVariable Long id 
-        // @RequestHeader("Authorization") User user
+        @PathVariable Long id,
+        @RequestHeader("Authorization") TokenReqDTO token
     ) throws NotFoundException {
-        Task task = taskService.getById(id);
+        User user = userService.getUserByToken(token.getToken());
+        Task task = taskService.getById(id, user);
         return ResponseEntity.ok(new TaskResDTO(task));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        taskService.deleteById(id);
+    public ResponseEntity<Void> deleteById(
+        @PathVariable Long id,  
+        @RequestHeader("Authorization") TokenReqDTO token
+    )throws NotFoundException {
+        User user = userService.getUserByToken(token.getToken());
+        taskService.deleteById(id, user);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskResDTO> updateTask(
         @RequestBody TaskReqDTO req,
-        @PathVariable Long id
-        // @RequestHeader('Authorization') User user
+        @PathVariable Long id,
+        @RequestHeader("Authorization") TokenReqDTO token
     )throws NotFoundException {
-        Task task = taskService.getById(id);
+        User user = userService.getUserByToken(token.getToken());
+        Task task = taskService.getById(id, user);
         task.update(req);
         task = taskService.saveTask(task);
         return ResponseEntity.ok().body(new TaskResDTO(task));

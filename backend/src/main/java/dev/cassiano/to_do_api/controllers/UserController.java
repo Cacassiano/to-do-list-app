@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.cassiano.to_do_api.dtos.TokenDTO;
-import dev.cassiano.to_do_api.dtos.UserReqDTO;
+import dev.cassiano.to_do_api.dtos.user.TokenDTO;
+import dev.cassiano.to_do_api.dtos.user.UserLoginDTO;
+import dev.cassiano.to_do_api.dtos.user.UserReqDTO;
 import dev.cassiano.to_do_api.entities.User;
+import dev.cassiano.to_do_api.exceptions.customs.NotFoundException;
 import dev.cassiano.to_do_api.services.UserService;
 import jakarta.validation.Valid;
 
@@ -24,6 +26,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<TokenDTO> registerUser(@RequestBody @Valid UserReqDTO req) {
         String token = userService.saveUser(new User(req));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenDTO(token));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<TokenDTO> loginUser(@RequestBody @Valid UserLoginDTO req) throws NotFoundException {
+        String token = userService.login(req.getEmail(), req.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(new TokenDTO(token));
     }
 }

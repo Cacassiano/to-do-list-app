@@ -1,4 +1,4 @@
-package dev.cassiano.to_do_api.dtos;
+package dev.cassiano.to_do_api.dtos.user;
 
 import org.hibernate.validator.constraints.Length;
 

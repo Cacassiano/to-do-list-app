@@ -1,4 +1,4 @@
-package dev.cassiano.to_do_api.dtos;
+package dev.cassiano.to_do_api.dtos.task;
 
 import java.time.LocalDateTime;
 

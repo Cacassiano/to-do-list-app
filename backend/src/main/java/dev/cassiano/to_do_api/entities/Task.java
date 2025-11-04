@@ -2,7 +2,7 @@ package dev.cassiano.to_do_api.entities;
 
 import java.time.LocalDateTime;
 
-import dev.cassiano.to_do_api.dtos.TaskReqDTO;
+import dev.cassiano.to_do_api.dtos.task.TaskReqDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

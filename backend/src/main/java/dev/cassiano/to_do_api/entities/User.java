@@ -9,14 +9,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-import dev.cassiano.to_do_api.dtos.UserReqDTO;
+import dev.cassiano.to_do_api.dtos.user.UserReqDTO;
 
 @Entity(name="users")
 @Table(name="users")
 @Getter
+@Setter
 @NoArgsConstructor
 public class User {
 

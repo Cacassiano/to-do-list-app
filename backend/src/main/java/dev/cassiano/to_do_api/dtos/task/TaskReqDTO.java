@@ -1,4 +1,4 @@
-package dev.cassiano.to_do_api.dtos;
+package dev.cassiano.to_do_api.dtos.task;
 
 import dev.cassiano.to_do_api.services.enums.Status;
 import jakarta.validation.constraints.NotBlank;
