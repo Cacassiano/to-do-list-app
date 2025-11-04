@@ -1,5 +1,6 @@
 package dev.cassiano.to_do_api.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,8 +41,6 @@ public class User {
     @Column(name="username", nullable=false, unique=false)
     private String username;
 
-    @OneToMany(mappedBy="id")
+    @OneToMany(mappedBy="user",cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Task> tasks;
-
-
 }

@@ -1,5 +1,9 @@
 package dev.cassiano.to_do_api.controllers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +43,16 @@ public class TaskController {
         Task task = taskService.saveTask(new Task(req, user));
         return ResponseEntity.status(HttpStatus.CREATED).body(new TaskResDTO(task));
     }
+
+    @GetMapping
+    public ResponseEntity<Map<String, List<TaskResDTO>>> getAll(
+        @RequestHeader("Authorization") TokenReqDTO token
+    ) throws NotFoundException {
+        User user = userService.getUserByToken(token.getToken());
+        Map<String, List<TaskResDTO>> response = new HashMap<>();
+        response.put("data", user.getTasks().stream().map(TaskResDTO::new).toList());
+        return ResponseEntity.ok(response);
+    } 
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResDTO> getTaksById(
