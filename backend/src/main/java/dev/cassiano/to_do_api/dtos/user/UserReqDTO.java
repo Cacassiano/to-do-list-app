@@ -11,14 +11,13 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserReqDTO {
-    @Email(message = "not a valid email")
-    @NotBlank(message = "email cant be blank")
-    private final String email;
-
-    @NotBlank(message = "username cant be blank")
+    @NotBlank(message = "Username cant be blank")
     private final String username;
 
-    @NotBlank(message = "password cant be blank")
-    @Length(min = 8, message = "invalid password")
+    @Length(min = 8, message = "Password must have a minimum length of 8 characters")
     private final String password;
+
+    @Email(message = "The given email is not valid")
+    @NotBlank(message = "Email cant be blank or null")
+    private final String email;
 }

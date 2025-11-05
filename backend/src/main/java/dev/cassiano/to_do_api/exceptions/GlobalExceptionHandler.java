@@ -1,5 +1,6 @@
 package dev.cassiano.to_do_api.exceptions;
 
+import dev.cassiano.to_do_api.dtos.exceptions.InvalidArgumentDTO;
 import dev.cassiano.to_do_api.exceptions.customs.NotFoundException;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,13 +22,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> badRequestHandler(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body("Invalid request");
+        return ResponseEntity.badRequest().body("Invalid request -> "+ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    // TODO improve the response body/message
-    public ResponseEntity<String> invalidRequest(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request");
+    public ResponseEntity<InvalidArgumentDTO> invalidRequest(MethodArgumentNotValidException ex) {
+        InvalidArgumentDTO res = new InvalidArgumentDTO("The given values are violating the field constraints",ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> dataViolation(DataIntegrityViolationException ex) {
-        String message = ex.getMessage().split("ERROR: ")[1].split("Detalhe:")[0];
+        String message = ex.getMessage().split("ERROR: ")[1].split("Detalhe:")[0].split('"'+"")[0];
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
 }

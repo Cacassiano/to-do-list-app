@@ -10,11 +10,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserLoginDTO {
-    @NotBlank
-    @Length(min = 8)
+    @Length(min = 8, message = "Password must have a minimum length of 8 characters")
+    @NotBlank(message = "Password cant be blank or null")
     private final String password;
 
-    @Email
-    @NotBlank
+    @Email(message = "The given email is not valid")
+    @NotBlank(message = "Email cant be blank or null")
     private final String email;
 }

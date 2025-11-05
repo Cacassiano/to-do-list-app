@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class TaskReqDTO {
-    @NotBlank
+    @NotBlank(message = "Title cant be blank or null")
     private final String title;
     private final String description;
     private final String status;
