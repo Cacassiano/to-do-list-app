@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 
-FROM activestate/jre
+FROM openjdk:17-ea-slim
 WORKDIR /app
 
 COPY --from=build build/target/to-do-api-0.0.1-SNAPSHOT.jar app.jar
