@@ -59,8 +59,8 @@ public class TaskController {
         @PathVariable Long id,
         @RequestHeader("Authorization") TokenReqDTO token
     ) throws NotFoundException {
-        User user = userService.getUserByToken(token.getToken());
-        Task task = taskService.getById(id, user);
+        String user_email = userService.getEmailByToken(token.getToken());
+        Task task = taskService.getById(id, user_email);
         return ResponseEntity.ok(new TaskResDTO(task));
     }
 
@@ -70,8 +70,8 @@ public class TaskController {
         @PathVariable Long id,  
         @RequestHeader("Authorization") TokenReqDTO token
     )throws NotFoundException {
-        User user = userService.getUserByToken(token.getToken());
-        taskService.deleteById(id, user);
+        String user_email = userService.getEmailByToken(token.getToken());
+        taskService.deleteById(id, user_email);
         return ResponseEntity.noContent().build();
     }
 
@@ -81,8 +81,8 @@ public class TaskController {
         @PathVariable Long id,
         @RequestHeader("Authorization") TokenReqDTO token
     )throws NotFoundException {
-        User user = userService.getUserByToken(token.getToken());
-        Task task = taskService.getById(id, user);
+        String user_email = userService.getEmailByToken(token.getToken());
+        Task task = taskService.getById(id, user_email);
         task.update(req);
         task = taskService.saveTask(task);
         return ResponseEntity.ok().body(new TaskResDTO(task));

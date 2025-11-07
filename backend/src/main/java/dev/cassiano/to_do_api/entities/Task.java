@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import dev.cassiano.to_do_api.dtos.task.TaskReqDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class Task {
     @Column(name="updated-at", nullable=false, unique=false)
     private LocalDateTime updated_at;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="owner")
     private User user;
 

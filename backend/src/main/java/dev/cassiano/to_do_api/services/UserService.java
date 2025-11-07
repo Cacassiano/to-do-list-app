@@ -33,8 +33,18 @@ public class UserService {
         return tokenService.createToken(user);
     }
 
-    public User getUserByToken(String token) throws NotFoundException{
+    public String getEmailByToken(String token) throws NotFoundException{
         String email = tokenService.getEmailFromToken(token);
+        if(email == null || email.length() < 1) throw new NotFoundException("Subject not found");
+        return email;
+    }
+
+    public User getByEmail(String email) throws NotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    public User getUserByToken(String token) throws NotFoundException{
+        String email = getEmailByToken(token);
+        return getByEmail(email);
     }
 }
