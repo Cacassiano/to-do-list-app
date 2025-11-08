@@ -19,15 +19,18 @@ public class TaskService {
 
     public Task getById(Long id, String user_email) throws NotFoundException{
         Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("This task doesn't exists"));
-        if(task.getUser().getEmail() != user_email) throw new NotFoundException("This task doesn't exists");
+            .orElseThrow(() -> new NotFoundException("This task doesn't exists"));;
+            
+        System.out.println("Validating owner: "+task.getUser().getEmail()+" with the received: " + user_email);
+
+        if( !task.getUser().getEmail().equals(user_email) ) throw new NotFoundException("This task doesn't exists");
         return task;
     }
 
+
+
     public void deleteById(Long id, String user_email) throws NotFoundException{
-        Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("This task doesn't exists"));
-        if(task.getUser().getEmail() != user_email) throw new NotFoundException("This task doesn't exists");
-        taskRepository.deleteById(id);
+        Task task = getById(id, user_email);
+        taskRepository.delete(task);
     }
 }
