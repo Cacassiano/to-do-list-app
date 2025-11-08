@@ -21,27 +21,27 @@ import jakarta.persistence.ManyToOne;
 @NoArgsConstructor
 public class Task {
     @Id 
-    @GeneratedValue(strategy=GenerationType.SEQUENCE) 
+    @GeneratedValue(strategy=GenerationType.IDENTITY) 
     @Column(name="id", nullable=false, unique=true) 
     private Long id;
 
     @Column(name="title", nullable = false, unique=false)
     private String title;
 
-    @Column(name="discription", nullable = true, unique=false)
+    @Column(name="description", nullable = true, unique=false)
     private String description;
 
     @Column(name = "status", nullable = false, unique = false)
     public String status;
 
-    @Column(name="created-at", nullable= false, unique=false)
+    @Column(name="created_at", nullable= false, unique=false)
     private LocalDateTime created_at;
 
-    @Column(name="updated-at", nullable=false, unique=false)
+    @Column(name="updated_at", nullable=false, unique=false)
     private LocalDateTime updated_at;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="owner")
+    @JoinColumn(name="owner_id")
     private User user;
 
     public Task(TaskReqDTO req, User user) {
