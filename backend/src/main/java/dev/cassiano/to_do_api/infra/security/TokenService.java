@@ -21,7 +21,6 @@ public class TokenService {
     
     private final Long expirationInSecs =  (2*60)*60l;
 
-    // TODO exception handling with custom exception like 'SecurityException'
     public String createToken(User user) {
         Algorithm algorithm = Algorithm.HMAC512(secretKey);
         return JWT.create()

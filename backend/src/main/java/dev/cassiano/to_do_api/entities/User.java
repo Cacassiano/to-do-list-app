@@ -29,6 +29,13 @@ public class User {
         this.username = req.getUsername();
     }
 
+    // Use in test cases
+    public User(String email, String password, String username) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+
     @GeneratedValue(strategy=GenerationType.UUID) @Column(name = "id", nullable=false, unique= true) @Id 
     private String id;
 
