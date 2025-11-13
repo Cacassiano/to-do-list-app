@@ -25,6 +25,7 @@ import dev.cassiano.to_do_api.entities.User;
 import dev.cassiano.to_do_api.exceptions.customs.NotFoundException;
 import dev.cassiano.to_do_api.services.TaskService;
 import dev.cassiano.to_do_api.services.UserService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -36,7 +37,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskResDTO> createTask(
-        @RequestBody TaskReqDTO req,
+        @RequestBody @Valid TaskReqDTO req,
         @RequestHeader("Authorization") TokenReqDTO token
     ) throws NotFoundException{
         User user = userService.getUserByToken(token.getToken());
@@ -77,7 +78,7 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskResDTO> updateTask(
-        @RequestBody TaskReqDTO req,
+        @RequestBody @Valid TaskReqDTO req,
         @PathVariable Long id,
         @RequestHeader("Authorization") TokenReqDTO token
     )throws NotFoundException {

@@ -2,7 +2,9 @@ package dev.cassiano.to_do_api.controllers;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
+import dev.cassiano.to_do_api.dtos.task.TaskReqDTO;
 import dev.cassiano.to_do_api.dtos.task.TaskResDTO;
 import dev.cassiano.to_do_api.entities.Task;
 import dev.cassiano.to_do_api.entities.User;
@@ -141,4 +144,67 @@ class TaskControllerTests {
             .header("Authorization", doAuthHeader())
         ).andExpect(status().isNotFound());
     }
+
+    @SuppressWarnings("null")
+    @Test 
+    @DisplayName("Try create a task succesfully")
+    void createTaskCase1() throws Exception{
+        // Create request dto
+        TaskReqDTO request = new TaskReqDTO("My new test task", "Just for testing funcionalyties", "completed");
+        // Parse to string the previus object
+        String requestString = mapper.writeValueAsString(request);
+
+        // Perform the request and get the response as string
+        String response = mvc.perform(
+            post(this.BASE_URL)
+            .header("Authorization", doAuthHeader())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestString)
+        ).andExpectAll(
+            status().isCreated(),
+            content().contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse().getContentAsString();
+
+        // Parse reponse to a java record
+        TaskResDTO responseTask = mapper.readValue(response, TaskResDTO.class);
+
+        // Validate the sended request with the received reponse
+        assertEquals(responseTask.title(), request.getTitle());
+        assertEquals(responseTask.description(), request.getDescription());
+        assertEquals(responseTask.status(), request.getStatus());
+
+        // Validate if the task has been saved in db
+        assertTrue(taskRepository.existsById(responseTask.id()));
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    @DisplayName("Try create a task and BadRequest")
+    void createTaskCase2() throws Exception{
+        // Invalid Title
+        TaskReqDTO request = new TaskReqDTO(null, null, "completed");
+        // Parse to string
+        String requestString = mapper.writeValueAsString(request);
+
+        // Badrequest com o title
+        mvc.perform(
+            post(this.BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", doAuthHeader())
+            .content(requestString)
+        ).andExpect(status().isBadRequest());
+
+        // Invalid status
+        requestString = "{\"title\": \"test title\", \"status\": \"scheduled\"}";
+
+        // Badrequest with the invalid status
+        mvc.perform(
+            post(this.BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", doAuthHeader())
+            .content(requestString)
+        ).andExpect(status().isBadRequest());
+    }
+
 }
