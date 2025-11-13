@@ -3,6 +3,7 @@ package dev.cassiano.to_do_api.entities;
 import java.time.LocalDateTime;
 
 import dev.cassiano.to_do_api.dtos.task.TaskReqDTO;
+import dev.cassiano.to_do_api.services.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -51,6 +52,15 @@ public class Task {
         this.status = req.getStatus();
         this.description = req.getDescription();
         this.user = user;
+    }
+
+    public Task(String title, String description,Status status ,User user) {
+        this.title = title;
+        this.description = description;
+        this.user = user;
+        this.created_at = LocalDateTime.now();
+        this.updated_at = this.created_at;
+        this.status = status.name();
     }
 
     public void update(TaskReqDTO req) {
