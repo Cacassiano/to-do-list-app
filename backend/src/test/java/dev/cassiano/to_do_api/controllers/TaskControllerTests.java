@@ -46,13 +46,18 @@ class TaskControllerTests {
     // Security dependencies
     @Autowired
     private TokenService tokenService;
+    private String token;
+    @Autowired
+    private PasswordEncoder encoder;
+    // Repositories
     @Autowired 
     private UserRepository userRepository;
     @Autowired
     private TaskRepository taskRepository; 
-    @Autowired
-    private PasswordEncoder encoder;
-    private String token;
+    // User for tests
+    private User testUser;
+    // One Task for tasks
+    Task testTask;
 
     @BeforeAll
     void setup() {
@@ -61,15 +66,11 @@ class TaskControllerTests {
 
         // Creating a token
         String password = encoder.encode("testpassword");
-        User testUser = userRepository.save(new User("testUser@test.com", password, "testUser"));
+        testUser = userRepository.save(new User("testUser@test.com", password, "testUser"));
         token = tokenService.createToken(testUser);
-
-        // Add tasks to test
-        Task testTask;
-        for(int i = 0; i< 3; i++) {
-            testTask = new Task("TestTitle", "test Description", Status.PENDING, testUser);
-            taskRepository.save(testTask);
-        }
+        // Setting up a task to db
+        this.testTask = new Task("TestTitle", "test Description", Status.PENDING, testUser);
+        taskRepository.save(testTask);
     }  
     
     private String doAuthHeader() {
@@ -80,6 +81,14 @@ class TaskControllerTests {
     @Test
     @DisplayName("Try get all tasks sucefully from db")
     void getAllCase1() throws UnsupportedEncodingException, Exception {
+        // Add tasks to test
+        Task getAllTasks;
+        for(int i = 0; i< 3; i++) {
+            getAllTasks = new Task("TestTitle", "test Description", Status.PENDING, testUser);
+            taskRepository.save(getAllTasks);
+        }
+
+        // Perform the request and get the response as String
         String response = mvc.perform(
             get(this.BASE_URL)
             .header("Authorization", doAuthHeader())
@@ -93,7 +102,7 @@ class TaskControllerTests {
         List<TaskResDTO> tasks = responseAsMap.get("data");
 
         // Assert that will be 3 or more tasks because other test can create tasks 
-        assertEquals(tasks.size()>=3, true);
+        assertEquals(tasks.size()>=4, true);
     }
 
     @Test
@@ -102,5 +111,34 @@ class TaskControllerTests {
         mvc.perform(
             get(this.BASE_URL)
         ).andExpect(status().isForbidden());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    @DisplayName("Try get task by id Succesfully")
+    void getByIdCase1() throws Exception{
+        String response = mvc.perform(
+            get(this.BASE_URL+"/"+testTask.getId())
+            .header("Authorization", doAuthHeader())
+        ).andExpectAll(
+            status().isOk(),
+            content().contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse().getContentAsString();
+
+        TaskResDTO resonseTask = mapper.readValue(response, TaskResDTO.class);
+
+        assertEquals(resonseTask.id(), testTask.getId());
+        assertEquals(resonseTask.title(), testTask.getTitle());
+        assertEquals(resonseTask.description(), testTask.getDescription());
+        assertEquals(resonseTask.status(), testTask.getStatus());
+    }
+
+    @Test
+    @DisplayName("Try get by id and NotFound")
+    void getByIdCase2() throws Exception{
+        mvc.perform(
+            get(this.BASE_URL+"/"+-1)
+            .header("Authorization", doAuthHeader())
+        ).andExpect(status().isNotFound());
     }
 }
