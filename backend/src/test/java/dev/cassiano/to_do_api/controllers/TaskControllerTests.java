@@ -211,6 +211,7 @@ class TaskControllerTests {
 
 
     @Test
+    @SuppressWarnings("null")
     @DisplayName("Try delete succesfully")
     void deleteByIdCase1() throws Exception {
         // Create a new task
@@ -228,6 +229,7 @@ class TaskControllerTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     @DisplayName("Try delete and NotFound")
     void deleteByIdCase2() throws Exception {
         // Pass a invalid id
