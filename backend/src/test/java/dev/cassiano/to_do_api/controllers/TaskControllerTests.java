@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -253,5 +254,83 @@ class TaskControllerTests {
         // Verify if the task was not deleted from db
         assertTrue(taskRepository.existsById(testTask.getId()));
     }
+
+
+    @SuppressWarnings("null")
+    @Test 
+    @DisplayName("Try update a task succesfully")
+    void updateTaskCase1() throws Exception{
+        // Create request dto
+        TaskReqDTO request = new TaskReqDTO("Updated title", "updated Description", "pending");
+        // Parse to string the previus object
+        String requestString = mapper.writeValueAsString(request);
+
+        // Perform the request and get the response as string
+        String response = mvc.perform(
+            put(this.BASE_URL+"/"+testTask.getId())
+            .header("Authorization", doAuthHeader())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestString)
+        ).andExpectAll(
+            status().isOk(),
+            content().contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse().getContentAsString();
+
+        // Parse reponse to a java record
+        TaskResDTO responseTask = mapper.readValue(response, TaskResDTO.class);
+
+        // Validate the sended request with the received reponse
+        assertEquals(responseTask.title(), request.getTitle());
+        assertEquals(responseTask.description(), request.getDescription());
+        assertEquals(responseTask.status(), request.getStatus());
+
+        // Validate if the task has been saved in db
+        Task updatedTask = taskRepository.findById(responseTask.id()).get();
+
+        // Validate the new task with the expected values
+        assertEquals(updatedTask.getTitle(), request.getTitle());
+        assertEquals(updatedTask.getDescription(), request.getDescription());
+        assertEquals(updatedTask.getStatus(), request.getStatus());
+
+    }
+    
+    @SuppressWarnings("null")
+    @Test
+    @DisplayName("Try update and NotFound")
+    void updateTaskCase2() throws Exception{
+        // Create request dto
+        TaskReqDTO request = new TaskReqDTO("Updated title", "updated Description", "completed");
+        // Parse to string the previous object
+        String requestString = mapper.writeValueAsString(request);
+
+        // Invalid id should return NotFound
+        mvc.perform(
+            put(this.BASE_URL+"/"+-1)
+            .header("Authorization", doAuthHeader())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestString)
+        ).andExpect(status().isNotFound());
+
+        // Creating a new token for another user
+        String password = encoder.encode("testpassword");
+        User newUser = userRepository.save(new User("testUser2@test.com", password, "testUser2"));
+        String newToken = tokenService.createToken(newUser);
+
+        // Try update a task that is not the owner
+        mvc.perform(
+            put(this.BASE_URL+"/"+testTask.getId())
+            .header("Authorization", "Bearer "+newToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestString)
+        ).andExpect(status().isNotFound());
+
+        // Verify the original task was not modified in db
+        Task stored = taskRepository.findById(testTask.getId()).get();
+        
+        assertEquals(stored.getTitle(), testTask.getTitle());
+        assertEquals(stored.getDescription(), testTask.getDescription());
+        assertEquals(stored.getStatus(), testTask.getStatus());
+    }
+
 
 }
