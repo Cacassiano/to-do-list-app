@@ -2,7 +2,9 @@ package dev.cassiano.to_do_api.controllers;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -205,6 +207,49 @@ class TaskControllerTests {
             .header("Authorization", doAuthHeader())
             .content(requestString)
         ).andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DisplayName("Try delete succesfully")
+    void deleteByIdCase1() throws Exception {
+        // Create a new task
+        Task testDeleteTask = new Task("test title", "test description", Status.IN_PROGRESS, testUser);
+        testDeleteTask = taskRepository.save(testDeleteTask);
+
+        // Perform the delete task
+        mvc.perform(
+            delete( this.BASE_URL+"/"+testDeleteTask.getId() )
+            .header("Authorization", doAuthHeader())
+        ).andExpect( status().isNoContent() );
+
+        // Verify if the task was deleted from db
+        assertFalse(taskRepository.existsById(testDeleteTask.getId()));
+    }
+
+    @Test
+    @DisplayName("Try delete and NotFound")
+    void deleteByIdCase2() throws Exception {
+        // Pass a invalid id
+        mvc.perform(
+            delete( this.BASE_URL+"/"+-1 )
+            .header("Authorization", doAuthHeader())
+        ).andExpect( status().isNotFound() );
+
+
+        // Creating a new token 
+        String password = encoder.encode("testpassword");
+        User newUser = userRepository.save(new User("testUser2@test.com", password, "testUser"));
+        String newToken = tokenService.createToken(newUser);
+
+        // Try delete a task that is not the owner
+        mvc.perform(
+            delete(this.BASE_URL+"/"+testTask.getId())
+            .header("Authorization", "Bearer "+newToken)
+        ).andExpect(status().isNotFound());
+
+        // Verify if the task was not deleted from db
+        assertTrue(taskRepository.existsById(testTask.getId()));
     }
 
 }
