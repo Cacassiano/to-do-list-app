@@ -24,6 +24,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private UserRepository userRepository;
     
     @Override
+    @SuppressWarnings("null")
     protected void doFilterInternal(
         HttpServletRequest request, 
         HttpServletResponse response, 
