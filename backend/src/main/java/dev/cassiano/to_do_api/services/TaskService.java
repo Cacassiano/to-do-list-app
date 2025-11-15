@@ -8,6 +8,7 @@ import dev.cassiano.to_do_api.exceptions.customs.NotFoundException;
 import dev.cassiano.to_do_api.repositories.TaskRepository;
 
 @Service
+@SuppressWarnings("null")
 public class TaskService {
     
     @Autowired
