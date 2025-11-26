@@ -15,7 +15,7 @@ export default function RegisterPage() {
         try{
             if(!token) throw new Error("No token");;
         
-            const res = api.get("/auth/check", {
+            const res = await api.get("/auth/check", {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

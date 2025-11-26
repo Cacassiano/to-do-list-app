@@ -16,8 +16,8 @@ export default function Login_Page() {
     async function validate_token() {
         try{
             if(!token) throw new Error("No token");;
-        
-            const res = api.get("/auth/check", {
+            console.log(token)
+            const res = await api.get("/auth/check", {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
