@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from  "../services/AxiosService.js"
 
 export default function RegisterPage() {
@@ -7,6 +7,26 @@ export default function RegisterPage() {
     const [token, ] = useState(localStorage.getItem("token"));
     const navigate = useNavigate();
 
+    useEffect(() => {
+        validate_token()
+    }, [token, navigate])
+    
+    async function validate_token() {
+        try{
+            if(!token) throw new Error("No token");;
+        
+            const res = api.get("/auth/check", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            if(res.status != 200) throw new Error("Invalid token");
+            navigate("/")
+        }catch(e) {
+            console.error(e)
+            localStorage.setItem("token", null)
+        } 
+    }
 
     async function handle_submit(e) {
 
