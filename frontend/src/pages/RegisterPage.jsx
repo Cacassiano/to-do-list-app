@@ -88,7 +88,9 @@ export default function RegisterPage() {
                 <h1 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
                     Registre um novo usuário
                 </h1>
-                
+                <h2 className="text-center text-xl text-gray-900 mb-8">
+                    Se tiver uma conta <a className="text-blue-900 underline hover:text-blue-600 cursor-pointer" onClick={() => navigate("/login")}>Faça o Login</a>
+                </h2>
                 <form onSubmit={handle_submit} autoComplete="true" className="bg-white py-8 px-6 shadow rounded-lg sm:px-10" method="POST">
                 <div className="mb-6">
                     <label htmlFor="iusername" className="block text-sm font-medium text-gray-700 mb-2">

@@ -49,7 +49,9 @@ export default function Login_Page() {
                 <h1 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
                 Login
                 </h1>
-                
+                <h2 className="text-center text-xl text-gray-900 mb-8">
+                    Se não tiver uma conta <a className="text-blue-900 underline hover:text-blue-600 cursor-pointer" onClick={() => navigate("/register")}>Registre-se</a>
+                </h2>
                 <form onSubmit={handle_submit} autoComplete="true" className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
                 <div className="mb-6">
                     <label htmlFor="iemail" className="block text-sm font-medium text-gray-700 mb-2">
