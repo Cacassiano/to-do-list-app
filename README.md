@@ -1,4 +1,3 @@
-```
 # To-Do List Application
 
 Esta aplicação é um sistema completo de gerenciamento de tarefas, composto por um backend desenvolvido em Spring Boot e um frontend construído em React. Toda a solução foi conteinerizada utilizando Docker e orquestrada via Docker Compose.
@@ -51,4 +50,3 @@ Após a inicialização, o frontend estará disponível em:
 ```
 
 O backend e o banco de dados serão iniciados automaticamente conforme configurado no Docker Compose.
-```
