@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @SuppressWarnings("null")
     public ResponseEntity<String> invalidType(MethodArgumentTypeMismatchException ex) {
         String message = "The property '"+ex.getPropertyName()+"' must be of type '"+ex.getRequiredType().getSimpleName()+"'";
         return ResponseEntity.badRequest().body(message);
