@@ -45,7 +45,7 @@ Após a inicialização, o frontend estará disponível em:
 
 ```
 
-[http://localhost:80](http://localhost:80)
+http://localhost:80
 
 ```
 
